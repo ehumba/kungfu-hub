@@ -1,0 +1,30 @@
+
+services:
+  # PostgreSQL database
+  db:
+    image: postgres:15
+    container_name: martialarts_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # Go backend (for containerized deployment)
+  app:
+    build: .
+    container_name: martialarts_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+    # Disabled during local dev, enabled in prod-like runs
+    profiles: ["app"]
+
+volumes:
+  db_data:
