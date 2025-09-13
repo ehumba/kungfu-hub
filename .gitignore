@@ -1,1 +1,5 @@
 .env
+test.http
+.gitignore
+go.mod
+go.sum
