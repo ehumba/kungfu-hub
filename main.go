@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -13,11 +14,13 @@ import (
 
 type apiConfig struct {
 	dbQueries *database.Queries
+	secret    string
 }
 
 func main() {
 	godotenv.Load()
 	dbURL := os.Getenv("DB_URL_LOCAL")
+	secret := os.Getenv("SECRET")
 
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
@@ -30,9 +33,19 @@ func main() {
 
 	apiCfg := apiConfig{
 		dbQueries: dbQueries,
+		secret:    secret,
 	}
 
 	// user creation
-	mux.HandleFunc("POST /api/users", apiCfg.createUserHandler)
+	mux.HandleFunc("/api/users", apiCfg.createUserHandler)
 
+	// login
+	mux.HandleFunc("/api/login", apiCfg.loginHandler)
+
+	server := http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
