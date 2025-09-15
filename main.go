@@ -37,10 +37,22 @@ func main() {
 	}
 
 	// user creation
-	mux.HandleFunc("/api/users", apiCfg.createUserHandler)
+	mux.HandleFunc("POST /api/users", apiCfg.createUserHandler)
 
 	// login
-	mux.HandleFunc("/api/login", apiCfg.loginHandler)
+	mux.HandleFunc("POST /api/login", apiCfg.loginHandler)
+
+	// refresh token
+	mux.HandleFunc("POST /api/refresh", apiCfg.handlerRefresh)
+
+	// revoke token
+	mux.HandleFunc("DELETE /api/revoke", apiCfg.handlerRevoke)
+
+	// update user data
+	mux.HandleFunc("PUT /api/users", apiCfg.updateUserDataHandler)
+
+	// delete user
+	mux.HandleFunc("DELETE /api/users", apiCfg.deleteUserHandler)
 
 	server := http.Server{
 		Addr:    ":8080",
