@@ -54,6 +54,18 @@ func main() {
 	// delete user
 	mux.HandleFunc("DELETE /api/users", apiCfg.deleteUserHandler)
 
+	// list martial arts
+	mux.HandleFunc("GET /api/martial_arts", apiCfg.listMartialArtsHandler)
+
+	// subscribe to martial art
+	mux.HandleFunc("POST /api/subscribe", apiCfg.subscribeHandler)
+
+	// unsubscribe from martial art
+	mux.HandleFunc("POST /api/unsubscribe", apiCfg.unsubscribeHandler)
+
+	// list user subscriptions
+	mux.HandleFunc("GET /api/subscriptions", apiCfg.listUserSubscriptionsHandler)
+
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: mux,

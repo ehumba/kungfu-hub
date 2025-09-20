@@ -11,6 +11,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type MartialArt struct {
+	ID   uuid.UUID
+	Name string
+}
+
 type RefreshToken struct {
 	Token     string
 	CreatedAt time.Time
@@ -18,6 +23,12 @@ type RefreshToken struct {
 	UserID    uuid.UUID
 	ExpiresAt time.Time
 	RevokedAt sql.NullTime
+}
+
+type Subscription struct {
+	ID           uuid.UUID
+	UserID       uuid.UUID
+	MartialArtID uuid.UUID
 }
 
 type User struct {
