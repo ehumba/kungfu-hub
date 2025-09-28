@@ -19,7 +19,7 @@ RETURNING id, user_id, martial_art_id
 
 type AddSubscriptionParams struct {
 	UserID       uuid.UUID
-	MartialArtID uuid.UUID
+	MartialArtID int32
 }
 
 func (q *Queries) AddSubscription(ctx context.Context, arg AddSubscriptionParams) (Subscription, error) {
@@ -65,7 +65,7 @@ WHERE user_id = $1 AND martial_art_id = $2
 
 type RemoveSubscriptionParams struct {
 	UserID       uuid.UUID
-	MartialArtID uuid.UUID
+	MartialArtID int32
 }
 
 func (q *Queries) RemoveSubscription(ctx context.Context, arg RemoveSubscriptionParams) error {

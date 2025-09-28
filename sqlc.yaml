@@ -3,6 +3,8 @@ sql:
   - schema: "sql/schema"
     queries: "sql/queries"
     engine: "postgresql"
+    database:
+      uri: "postgres://martialuser:martialpass@localhost:5433/martialarts?sslmode=disable"
     gen:
       go:
         out: "internal/database"

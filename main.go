@@ -66,6 +66,36 @@ func main() {
 	// list user subscriptions
 	mux.HandleFunc("GET /api/subscriptions", apiCfg.listUserSubscriptionsHandler)
 
+	// list events by martial art
+	mux.HandleFunc("GET /api/events_by_art", apiCfg.getEventsByMartialArtHandler)
+
+	// list all upcoming events
+	mux.HandleFunc("GET /api/events", apiCfg.getAllEventsHandler)
+
+	// list news by martial art
+	mux.HandleFunc("GET /api/news_by_art", apiCfg.getNewsByMartialArtHandler)
+
+	// list news by event
+	mux.HandleFunc("GET /api/news_by_event", apiCfg.getNewsByEventHandler)
+
+	// list all recent news
+	mux.HandleFunc("GET /api/news", apiCfg.getAllNewsHandler)
+
+	// post comment
+	mux.HandleFunc("POST /api/comments", apiCfg.postCommentHandler)
+
+	// edit comment
+	mux.HandleFunc("PUT /api/comments", apiCfg.editCommentHandler)
+
+	// delete comment
+	mux.HandleFunc("DELETE /api/comments", apiCfg.deleteCommentHandler)
+
+	// follow
+	mux.HandleFunc("POST /api/follow", apiCfg.followHandler)
+
+	// unfollow
+	mux.HandleFunc("POST /api/unfollow", apiCfg.unfollowHandler)
+
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: mux,

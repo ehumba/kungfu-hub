@@ -12,7 +12,7 @@ import (
 )
 
 type MartialArt struct {
-	ID   uuid.UUID
+	ID   int32
 	Name string
 }
 
@@ -28,7 +28,7 @@ type RefreshToken struct {
 type Subscription struct {
 	ID           uuid.UUID
 	UserID       uuid.UUID
-	MartialArtID uuid.UUID
+	MartialArtID int32
 }
 
 type User struct {

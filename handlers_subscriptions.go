@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/ehumba/kungfu-hub/internal/auth"
 	"github.com/ehumba/kungfu-hub/internal/database"
-	"github.com/google/uuid"
 )
 
 func (a *apiConfig) listMartialArtsHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,15 +41,17 @@ func (a *apiConfig) subscribeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parsedMartialID, err := uuid.Parse(params.MartialArtID)
+	id64, err := strconv.ParseInt(params.MartialArtID, 10, 32)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "invalid martial_art_id")
 		return
 	}
 
+	id32 := int32(id64)
+
 	subscribeParams := database.AddSubscriptionParams{
 		UserID:       userID,
-		MartialArtID: parsedMartialID,
+		MartialArtID: id32,
 	}
 	newSub, err := a.dbQueries.AddSubscription(r.Context(), subscribeParams)
 	if err != nil {
@@ -81,15 +83,17 @@ func (a *apiConfig) unsubscribeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parsedMartialID, err := uuid.Parse(params.MartialArtID)
+	id64, err := strconv.ParseInt(params.MartialArtID, 10, 32)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "invalid martial_art_id")
 		return
 	}
 
+	id32 := int32(id64)
+
 	removeSubParams := database.RemoveSubscriptionParams{
 		UserID:       userID,
-		MartialArtID: parsedMartialID,
+		MartialArtID: id32,
 	}
 	err = a.dbQueries.RemoveSubscription(r.Context(), removeSubParams)
 	if err != nil {
