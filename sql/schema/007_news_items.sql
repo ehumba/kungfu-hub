@@ -5,7 +5,8 @@ CREATE TABLE news_items(
     martial_art_id INT NOT NULL REFERENCES martial_arts(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
-    published_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    published_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    url TEXT NOT NULL
 );
 
 -- +gooseDown

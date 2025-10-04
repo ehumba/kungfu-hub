@@ -1,10 +1,8 @@
 -- +gooseUp
 INSERT INTO martial_arts (name) VALUES
-('Karate'),
 ('Judo'),
 ('Taekwondo'),
-('Brazilian Jiu-Jitsu'),
-('Sanda');
+('Wushu');
 
 -- +gooseDown
-DELETE FROM martial_arts WHERE name IN ('Karate', 'Judo', 'Taekwondo', 'Brazilian Jiu-Jitsu', 'Sanda');
+DELETE FROM martial_arts WHERE name IN ('Judo', 'Taekwondo', 'Wushu');

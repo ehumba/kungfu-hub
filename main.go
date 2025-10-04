@@ -96,6 +96,9 @@ func main() {
 	// unfollow
 	mux.HandleFunc("POST /api/unfollow", apiCfg.unfollowHandler)
 
+	// fetch feed
+	mux.HandleFunc("GET /api/feed", apiCfg.fetchFeedHandler)
+
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: mux,

@@ -8,7 +8,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"time"
 )
 
 const getAllEvents = `-- name: GetAllEvents :many
@@ -21,8 +20,8 @@ type GetAllEventsRow struct {
 	ID           int32
 	MartialArtID int32
 	Title        string
-	Date         time.Time
-	Location     string
+	Date         sql.NullTime
+	Location     sql.NullString
 	Description  sql.NullString
 }
 
@@ -66,8 +65,8 @@ type GetEventsByMartialArtIDRow struct {
 	ID           int32
 	MartialArtID int32
 	Title        string
-	Date         time.Time
-	Location     string
+	Date         sql.NullTime
+	Location     sql.NullString
 	Description  sql.NullString
 }
 
