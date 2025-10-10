@@ -12,7 +12,6 @@ import (
 
 const getAllEvents = `-- name: GetAllEvents :many
 SELECT id, martial_art_id, title, date, location, description FROM events
-WHERE date >= NOW()
 ORDER BY date ASC
 `
 
@@ -57,7 +56,7 @@ func (q *Queries) GetAllEvents(ctx context.Context) ([]GetAllEventsRow, error) {
 
 const getEventsByMartialArtID = `-- name: GetEventsByMartialArtID :many
 SELECT id, martial_art_id, title, date, location, description FROM events
-WHERE martial_art_id = $1 AND date >= NOW()
+WHERE martial_art_id = $1
 ORDER BY date ASC
 `
 
@@ -98,4 +97,49 @@ func (q *Queries) GetEventsByMartialArtID(ctx context.Context, dollar_1 sql.Null
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertEvent = `-- name: InsertEvent :one
+INSERT INTO events (martial_art_id, title, date, location, description, url)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, martial_art_id, title, date, location, description
+`
+
+type InsertEventParams struct {
+	Column1 sql.NullInt32
+	Column2 sql.NullString
+	Column3 sql.NullTime
+	Column4 sql.NullString
+	Column5 sql.NullString
+	Column6 sql.NullString
+}
+
+type InsertEventRow struct {
+	ID           int32
+	MartialArtID int32
+	Title        string
+	Date         sql.NullTime
+	Location     sql.NullString
+	Description  sql.NullString
+}
+
+func (q *Queries) InsertEvent(ctx context.Context, arg InsertEventParams) (InsertEventRow, error) {
+	row := q.db.QueryRowContext(ctx, insertEvent,
+		arg.Column1,
+		arg.Column2,
+		arg.Column3,
+		arg.Column4,
+		arg.Column5,
+		arg.Column6,
+	)
+	var i InsertEventRow
+	err := row.Scan(
+		&i.ID,
+		&i.MartialArtID,
+		&i.Title,
+		&i.Date,
+		&i.Location,
+		&i.Description,
+	)
+	return i, err
 }

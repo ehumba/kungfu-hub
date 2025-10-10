@@ -13,7 +13,6 @@ import (
 
 const getAllNews = `-- name: GetAllNews :many
 SELECT id, event_id, martial_art_id, title, content, published_at FROM news_items
-WHERE published_at >= NOW() - INTERVAL '7 days'
 ORDER BY published_at DESC
 `
 
@@ -56,54 +55,9 @@ func (q *Queries) GetAllNews(ctx context.Context) ([]GetAllNewsRow, error) {
 	return items, nil
 }
 
-const getNewsByEvent = `-- name: GetNewsByEvent :many
-SELECT id, event_id, martial_art_id, title, content, published_at FROM news_items
-WHERE event_id = $1 AND published_at >= NOW() - INTERVAL '7 days'
-ORDER BY published_at DESC
-`
-
-type GetNewsByEventRow struct {
-	ID           int32
-	EventID      sql.NullInt32
-	MartialArtID int32
-	Title        string
-	Content      string
-	PublishedAt  time.Time
-}
-
-func (q *Queries) GetNewsByEvent(ctx context.Context, dollar_1 sql.NullInt32) ([]GetNewsByEventRow, error) {
-	rows, err := q.db.QueryContext(ctx, getNewsByEvent, dollar_1)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetNewsByEventRow
-	for rows.Next() {
-		var i GetNewsByEventRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.EventID,
-			&i.MartialArtID,
-			&i.Title,
-			&i.Content,
-			&i.PublishedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getNewsByMartialArt = `-- name: GetNewsByMartialArt :many
 SELECT id, event_id, martial_art_id, title, content, published_at FROM news_items
-WHERE martial_art_id = $1 AND published_at >= NOW() - INTERVAL '7 days'
+WHERE martial_art_id = $1
 ORDER BY published_at DESC
 `
 
@@ -144,4 +98,49 @@ func (q *Queries) GetNewsByMartialArt(ctx context.Context, dollar_1 sql.NullInt3
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertNewsItem = `-- name: InsertNewsItem :one
+INSERT INTO news_items (event_id, martial_art_id, title, content, published_at, url)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, event_id, martial_art_id, title, content, published_at
+`
+
+type InsertNewsItemParams struct {
+	Column1 sql.NullInt32
+	Column2 sql.NullInt32
+	Column3 sql.NullString
+	Column4 sql.NullString
+	Column5 sql.NullTime
+	Column6 sql.NullString
+}
+
+type InsertNewsItemRow struct {
+	ID           int32
+	EventID      sql.NullInt32
+	MartialArtID int32
+	Title        string
+	Content      string
+	PublishedAt  time.Time
+}
+
+func (q *Queries) InsertNewsItem(ctx context.Context, arg InsertNewsItemParams) (InsertNewsItemRow, error) {
+	row := q.db.QueryRowContext(ctx, insertNewsItem,
+		arg.Column1,
+		arg.Column2,
+		arg.Column3,
+		arg.Column4,
+		arg.Column5,
+		arg.Column6,
+	)
+	var i InsertNewsItemRow
+	err := row.Scan(
+		&i.ID,
+		&i.EventID,
+		&i.MartialArtID,
+		&i.Title,
+		&i.Content,
+		&i.PublishedAt,
+	)
+	return i, err
 }

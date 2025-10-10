@@ -70,33 +70,6 @@ func (a *apiConfig) getNewsByMartialArtHandler(w http.ResponseWriter, r *http.Re
 	respondWithJSON(w, http.StatusOK, news)
 }
 
-func (a *apiConfig) getNewsByEventHandler(w http.ResponseWriter, r *http.Request) {
-	var params struct {
-		EventID string `json:"event_id"`
-	}
-	err := json.NewDecoder(r.Body).Decode(&params)
-	if err != nil || params.EventID == "" {
-		respondWithError(w, http.StatusBadRequest, "invalid request payload")
-		return
-	}
-
-	id64, err := strconv.ParseInt(params.EventID, 10, 32)
-	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "invalid martial_art_id")
-		return
-	}
-
-	id32 := int32(id64)
-	event_id := sql.NullInt32{Int32: id32, Valid: true}
-
-	news, err := a.dbQueries.GetNewsByEvent(r.Context(), event_id)
-	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "could not fetch news")
-		return
-	}
-	respondWithJSON(w, http.StatusOK, news)
-}
-
 func (a *apiConfig) getAllNewsHandler(w http.ResponseWriter, r *http.Request) {
 	news, err := a.dbQueries.GetAllNews(r.Context())
 	if err != nil {

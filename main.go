@@ -75,9 +75,6 @@ func main() {
 	// list news by martial art
 	mux.HandleFunc("GET /api/news_by_art", apiCfg.getNewsByMartialArtHandler)
 
-	// list news by event
-	mux.HandleFunc("GET /api/news_by_event", apiCfg.getNewsByEventHandler)
-
 	// list all recent news
 	mux.HandleFunc("GET /api/news", apiCfg.getAllNewsHandler)
 
@@ -98,6 +95,9 @@ func main() {
 
 	// fetch feed
 	mux.HandleFunc("GET /api/feed", apiCfg.fetchFeedHandler)
+
+	// import news and events
+	mux.HandleFunc("POST /api/admin/import", apiCfg.importHandler)
 
 	server := http.Server{
 		Addr:    ":8080",
