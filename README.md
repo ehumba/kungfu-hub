@@ -28,7 +28,7 @@ A martial arts news and events aggregator that helps practitioners stay updated 
 ### Installation
 1. Clone the repository
 ```
-git clone https://github.com/yourusername/kungfu-hub.git
+git clone https://github.com/ehumba/kungfu-hub.git
 cd kungfu-hub
 ```
 2. Set up environment variables
@@ -42,7 +42,7 @@ cp .env.example .env
 ```
 make migrate-up
 # Or without make:
-goose -dir ./sql/schema postgres "postgres://martialuser:martialpass@localhost:5433/martialarts?sslmode=disable" up
+goose -dir ./sql/schema postgres "<db_connection_string>" up
 ```
 5. Start the server
 `go run .`
